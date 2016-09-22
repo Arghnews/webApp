@@ -1,6 +1,7 @@
 <!DOCTYPE html PUBLIC "-//IETF//DTD HTML 2.0//EN">
 <HTML>
    <HEAD>
+		<meta charset="utf-8">
       <TITLE>
          Create account
       </TITLE>
@@ -14,14 +15,32 @@
 			formId.submit( function(e) {
 				e.preventDefault();
 				var actionUrl = e.currentTarget.action;
-				$.ajax({
-					url: actionUrl,
-					datatype: 'json',
-					data: formId.serializeArray(),
-					success: function(data) {
-						alert(data);
+				console.log("Sending ajax request to" + actionUrl);
+				//var serialForm = formId.serialize();
+				var serialForm = {};
+				formId.children("input").each(function() {
+					console.log("Kiddie - " + this.name + " " + this.value);
+					if (this.name != "") {
+						serialForm[this.name] = this.value;
 					}
 				});
+				console.log(serialForm);
+				console.log("Sending ajax request");
+				$.ajax({
+					url: actionUrl,
+					dataType: 'json', // type of data we expect back
+					data: serialForm,
+					type: "POST"
+				})
+				.done(function( json ) {
+					console.log(json)
+				})
+				.fail(function( xhr, status, errorThrown ) {
+					
+				})
+				.always(function( xhr, status ) {
+				});
+				console.log("End of js");
 			});
 		});
 	</script>
