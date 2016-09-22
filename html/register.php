@@ -2,13 +2,31 @@
 <HTML>
    <HEAD>
       <TITLE>
-         A Small Hello 
+         Create account
       </TITLE>
    </HEAD>
 <BODY>
-   <H1>Hi</H1>
-   <P>This is very minimal "hello world" HTML document.</P> 
-	<form action="backend/createUser.php" method="post">
+	<script type="text/javascript" src="jquery.js"></script>
+	<script>
+		$( document ).ready(function() {
+			// basic form validation
+			formId = $( "#createUserForm" );
+			formId.submit( function(e) {
+				e.preventDefault();
+				var actionUrl = e.currentTarget.action;
+				$.ajax({
+					url: actionUrl,
+					datatype: 'json',
+					data: formId.serializeArray(),
+					success: function(data) {
+						alert(data);
+					}
+				});
+			});
+		});
+	</script>
+	<H1>Hi</H1>
+	<form action="backend/createUser.php" method="post" id="createUserForm">
 		Username <input type="text" name="username"><br>
 		Password <input type="password" name="password"><br>
 		<input type="submit" value="Submit"><br>

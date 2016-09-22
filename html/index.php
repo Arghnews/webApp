@@ -31,6 +31,7 @@
 			';
 			
 		?>
+
 		<br>
 		<form action="register.php" method="post">
 			<input type="submit" value="Go to registration page!">

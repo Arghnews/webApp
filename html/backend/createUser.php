@@ -1,6 +1,6 @@
 <?php
 	require "common.php";
-	$GLOBALS['debug'] = true;
+	#$GLOBALS['debug'] = true; // uncomment for debugging
 	// for this page, don't want printout as it will break redirect?
 	
 	$pdo = connect();
