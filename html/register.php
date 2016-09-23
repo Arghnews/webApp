@@ -17,29 +17,28 @@
 				var actionUrl = e.currentTarget.action;
 				console.log("Sending ajax request to" + actionUrl);
 				//var serialForm = formId.serialize();
-				var serialForm = {};
+				/*var serialForm = {};
 				formId.children("input").each(function() {
 					console.log("Kiddie - " + this.name + " " + this.value);
 					if (this.name != "") {
 						serialForm[this.name] = this.value;
 					}
 				});
-				serialForm = formId.serialize();
+				*/
+				var serialForm = formId.serialize();
 				
-				console.log((serialForm));
-				console.log(JSON.stringify(serialForm));
-				
-				//var serialForm = formId.serializeArray();
-				//console.log(serialForm);
+				console.log("Sending this data in ajax -",serialForm);
 				console.log("Sending ajax request");
 				$.ajax({
 					data: serialForm,
-					dataType: 'json', // type of data we expect back
+					dataType: "json", // type of data we expect back
 					method: "POST",
 					url: actionUrl,
 				})
 				.done(function( json ) {
+					console.log("Received successful response!");
 					console.log(json);
+					
 				})
 				.fail(function( xhr, status, errorThrown ) {
 					
@@ -52,7 +51,7 @@
 	</script>
 	<H1>Hi</H1>
 	<form action="backend/createUser.php" method="post" id="createUserForm">
-		Username <input type="text" name="username"><br>
+		<span style="color:red">Username <input type="text" name="username"><br></span>
 		Password <input type="password" name="password"><br>
 		<input type="submit" value="Submit"><br>
 	</form>
