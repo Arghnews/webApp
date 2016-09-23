@@ -24,16 +24,22 @@
 						serialForm[this.name] = this.value;
 					}
 				});
-				console.log(serialForm);
+				serialForm = formId.serialize();
+				
+				console.log((serialForm));
+				console.log(JSON.stringify(serialForm));
+				
+				//var serialForm = formId.serializeArray();
+				//console.log(serialForm);
 				console.log("Sending ajax request");
 				$.ajax({
-					url: actionUrl,
-					dataType: 'json', // type of data we expect back
 					data: serialForm,
-					type: "POST"
+					dataType: 'json', // type of data we expect back
+					method: "POST",
+					url: actionUrl,
 				})
 				.done(function( json ) {
-					console.log(json)
+					console.log(json);
 				})
 				.fail(function( xhr, status, errorThrown ) {
 					

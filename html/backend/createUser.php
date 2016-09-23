@@ -4,12 +4,13 @@
 	// for this page, don't want printout as it will break redirect?
 	
 	$pdo = connect();
+
 	
 	// apparently salt is all handled for you using this snazzy bcrypt build in library!
-	$username = sanitise($_POST["username"]);
+	$username = $_POST['username'];
 	p($username." is username received");
 	$password = sanitise($_POST["password"]);
-	p($username." is password received");
+	p($password." is password received");
 	$hash = password_hash($password,PASSWORD_BCRYPT); # always 72 chars long
 	p($hash);
 	$comment = sanitise("Comment here!");
@@ -34,7 +35,7 @@
 		//die();
 	}
 
-	$return = array("success"=>"$success","successText"=>$successText);
+	$return = array("success"=>$success,"successText"=>$successText);
 	echo json_encode($return);
 	
 	// checks if the username is taken in the database, returns true if not taken
