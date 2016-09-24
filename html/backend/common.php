@@ -48,4 +48,176 @@ function connect() {
 	
 }
 
+// wrapper for fields
+// example below, although it's fairly negative so don't look at it for too long
+//{
+//	success: false
+//	text: "Could not create user" -- this text may/will be printed to user, make friendly
+//	"data": {
+//				success: false, // is O(n) call in number of fields, AND of all successes
+//				fields: {
+//					"username" => Field obj, ...
+//				}
+//			}
+//}
+// setting the success variable manually will override other settings
+// useful if database error then just fail
+class FieldList {
+	private $success;
+	private $text;
+	private $fields; // array of Field objects
+	
+	public function setSuccess($bool) {
+		$this->success = $bool;
+	}
+
+	public function setText($text) {
+		$this->text = $text;
+	}
+
+	// convenient wrapper so can go $FieldListInstance->getValue("username")
+	public function getValue($name) {
+		return $this->getField($name)->getValue();
+	}
+
+	// boolean, meant to be all success values ANDed
+	public function getSuccess() {
+		// set false if error has occurred, can return false immediately
+		if ( $this->success === false ) {
+			return false;
+		}
+		foreach ($this->fields as $field) {
+			if ( $field->getSuccess() === false) {
+				$this->success = false;
+				break;
+			}
+		}
+		return $this->success;
+	}
+
+	// requires PHP >= 5.6 (which I (obviously) have)
+	// where $fields is "username","password".. html name attribs
+	// eg. new FieldList($_POST,"username","password")
+	public function __construct($array, ...$names) {
+		$this->fields = array();
+		foreach($names as $name) {
+			// yes this could print passwords in plaintext
+			// but for debugging sanity I shall take this risk
+			// should only ever see this serverside for debugging anyway
+			p("Hi mum! ".$name." ".$array[$name]);
+			$this->fields += [ $name => (new Field($array[$name])) ];
+		}
+		$this->success = true;
+		$this->text = "";
+	}
+
+	// $name should be string that is field name
+	// returns Field object for editting
+	public function getField($name) {
+		return $this->fields[$name];
+	}
+
+	// maybe can just use json_encode dur?
+	public function toJson() {
+		$data = array();
+		foreach ($this->fields as $name => $field) {
+			$data += [$name => $field->toJson()];
+		}
+		$top = array("success"=>$this->getSuccess(),"data"=>$data,"text"=>$this->text);
+		return $top;
+	}
+
+	public function __toString() {
+		return json_encode($this->toJson());
+	}
+}
+
+// these are created with success as true by default
+// corresponds to a field in a html form
+// text var will be used in js on page to inform user of the problem
+//{
+//	"data": {
+//				"success": false,
+//				"text": "Username taken"
+//				"value": "bill25"
+//			}
+//}
+
+// this class should probably be private?
+class Field {
+	private $data;
+	public function __construct($value) {
+		$this->data = array("success"=>true,"text"=>"","value"=>$value);
+	}
+
+	// $name should be html form input attrib name, eg. "username"
+	public function getValue() {
+		return $this->data["value"];
+	}
+
+	public function setValue($value) {
+		$this->data["value"] = $value;
+	}
+	
+	// takes boolean
+	public function setSuccess($success) {
+		$this->data["success"] = $success;
+	}
+
+	// returns the value of success property
+	// if used success() would call func "success"
+	public function getSuccess() {
+		return $this->data["success"];
+	}
+
+	public function appendText($text) {
+		$this->data["text"] .= $text;
+	}
+	
+	// takes string, ie. failed because of db error
+	public function setText($text) {
+		$this->data["text"] = $text;
+	}
+
+	public function toJson() {
+		return array("data"=>$this->data);
+	}
+	
+	public function __toString() {
+		return json_encode($this->toJson());
+	}
+
+}
+
+// returns true if valid length 8-24
+function passwordLengthGood($pass) {
+	// default encoding/encoding specified in php.ini for nginx's php fpm module
+	// is 'UTF-8'
+	$len = mb_strlen($pass);
+	//$len = strlen($pass);
+	// original code of ($len >= 8 && $len <= 24) doesn't seem to work since I think
+	// when true these return 1, when false they seem to return nothing, when printed empty string
+	// be careful, these seem to return nothing or they don't print properly
+	// this does work though :P
+	if ( ( $len < 8 ) || ( $len > 24 ) )  {
+		return false;
+	} else {
+		return true;
+	}
+}
+
+// checks if the username is taken in the database, returns true if not taken
+function usernameTaken($username, $pdo) {
+	// check if users exists already
+	$query = "select count(*) as number from users where username=? limit 1";
+	$stmt = $pdo->prepare($query);
+	$stmt->execute([$username]);
+	$result = $stmt->fetch();
+	if ($result['number'] === 0) {
+		return false;
+	}
+	return true;
+}
+
+
 ?>
