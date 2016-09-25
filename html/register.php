@@ -16,10 +16,7 @@
 			$.each(fields, function(field, val) {
 				var fieldData = val["data"];
 				var problemChild = $( "input[name=" + field + "]");
-				var statusText = "";
-				if ( fieldData["success"] == false ) {
-					statusText = fieldData["text"];
-				}
+				var statusText = fieldData["text"];
 				problemChild.closest("span").find("x-status").html(statusText);
 			});
 		}
@@ -76,8 +73,15 @@
 				 	appendStatus(json);
 					if ( json["success"] == true ) {
 						console.log("Passed validation");
+						console.dir(json["text"]);
+						var formObj = $( "#" + formId );
+						console.log(formObj.append("<x-status>" + json["text"] + "</x-status>"));
 						// redirect to homepage
-						window.location.href = HOME;
+						setTimeout(
+							function() {
+								window.location.href = HOME;
+							}
+						, 1000);
 					}
 				});
 			});
@@ -86,7 +90,7 @@
 	<H1>Hi</H1>
 	<!-- Currently for easier jquery stuff all input tags must be wrapped in spans -->
 	<!-- Validate remote means input will be sent to server for validation on keypress -->
-	<form action="backend/createUser.php" method="post" id="createUserForm">
+	<form action="backend/createUser.php" method="post" id="createUserForm"><x-status></x-status>
 		Username <span><input class="validateRemote" type="text" name="username"><x-status></x-status></span> <br>
 		Password <span><input type="password" name="password"><x-status></x-status><br></span>
 		<input type="submit" value="Submit"><br>

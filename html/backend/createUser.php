@@ -47,6 +47,8 @@
 				$stmt = $pdo->prepare($query);
 				$stmt->execute([$fields->getValue("username"),$fields->getValue("password"),$comment]);
 				p("User successfully created");
+				$fields->setText("User created successfully!");
+				$fields->setSuccess(true);
 			} catch (Exception $e) { // obviously this could be PDOException
 				p("Database error ".$e->getMessage());
 				$fields->setText("Could not create user, database error");
