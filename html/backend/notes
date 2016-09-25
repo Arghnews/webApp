@@ -1,0 +1,20 @@
+
+//{
+//	success: false
+//	text: "Could not create user" -- this text may/will be printed to user, make friendly
+//	"data": {
+//				success: false, // is O(n) call in number of fields, AND of all successes
+//				fields: {
+//					"username" => // this is a field object
+							//	"data": {
+							//				"success": false,
+							//				"text": "Username taken"
+							//				"value": "bill25"
+							//			}
+//					"password" => ...
+//				}
+//			}
+//}
+// Assuming html form elements look like this				
+// Username <span><input type="text" name="username"><x-status></x-status></span> <br>
+// this sets the text for each to whatever the text returned by the backend is

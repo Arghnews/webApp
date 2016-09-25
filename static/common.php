@@ -7,7 +7,7 @@ if ( !isset($GLOBALS['debug']) ) {
 // println, puts br in for html, only prints if global debug var is set
 function p($p) {
 	if ( $GLOBALS['debug'] === true ) {
-		echo $p."\t<br>\n";
+		echo $p."\n";
 	}
 }
 
@@ -32,7 +32,7 @@ function connect() {
 		PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
 		PDO::ATTR_EMULATE_PREPARES => false 
 	];
-	p("Connecting to ".$dsn." ".$user." ".$pass." ".$opt);
+	p("Connecting to ".$dsn." ".$user." "."HIDDEN BUT PASSWORD HERE"." ".json_encode($opt));
 	
 	try {
 		$pdo = new PDO($dsn, $user, $pass, $opt);
@@ -66,6 +66,7 @@ class FieldList {
 	private $success;
 	private $text;
 	private $fields; // array of Field objects
+	private $keys; // array of strings that are keys
 	
 	public function setSuccess($bool) {
 		$this->success = $bool;
@@ -98,17 +99,36 @@ class FieldList {
 	// requires PHP >= 5.6 (which I (obviously) have)
 	// where $fields is "username","password".. html name attribs
 	// eg. new FieldList($_POST,"username","password")
-	public function __construct($array, ...$names) {
+	public function __construct($post) {
 		$this->fields = array();
-		foreach($names as $name) {
+		$keys = array();
+		foreach($post as $name => $value) {
+
+			// adds keys (strings) to array, username, password, etc.
+			$keys[] = $name;
+
 			// yes this could print passwords in plaintext
 			// but for debugging sanity I shall take this risk
 			// should only ever see this serverside for debugging anyway
-			p("Hi mum! ".$name." ".$array[$name]);
-			$this->fields += [ $name => (new Field($array[$name])) ];
+			p("Adding ".$name." ".$value);
+			$this->fields += [ $name => (new Field($value)) ];
 		}
+		$this->keys = $keys;
 		$this->success = true;
 		$this->text = "";
+	}
+
+	public function getKeys() {
+		return $this->keys;
+	}
+
+	public function hasKey($hasMe) {
+		foreach ($this->keys as $key) {
+			if ( $key === $hasMe ) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	// $name should be string that is field name
@@ -132,7 +152,7 @@ class FieldList {
 	}
 }
 
-// these are created with success as true by default
+// these are created with success as FALSE by default
 // corresponds to a field in a html form
 // text var will be used in js on page to inform user of the problem
 //{
@@ -147,7 +167,7 @@ class FieldList {
 class Field {
 	private $data;
 	public function __construct($value) {
-		$this->data = array("success"=>true,"text"=>"","value"=>$value);
+		$this->data = array("success"=>false,"text"=>"","value"=>$value);
 	}
 
 	// $name should be html form input attrib name, eg. "username"
@@ -171,6 +191,9 @@ class Field {
 	}
 
 	public function appendText($text) {
+		if ( $this->data["text"] !== "" ) {
+			$this->data["text"] .= ", ";
+		}
 		$this->data["text"] .= $text;
 	}
 	
@@ -190,7 +213,7 @@ class Field {
 }
 
 // returns true if valid length 8-24
-function passwordLengthGood($pass) {
+function passwordGood($pass) {
 	// default encoding/encoding specified in php.ini for nginx's php fpm module
 	// is 'UTF-8'
 	$len = mb_strlen($pass);
