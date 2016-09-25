@@ -18,3 +18,7 @@
 // Assuming html form elements look like this				
 // Username <span><input type="text" name="username"><x-status></x-status></span> <br>
 // this sets the text for each to whatever the text returned by the backend is
+
+stuff in the backend folder is not intended to be accessed by users,
+only intended to be called from inside other pages
+have not yet set up nginx to do this

@@ -1,4 +1,8 @@
 <?php
+
+const SESSION_START_PATH = "/var/www/html/backend/sessionStart.php";
+const SESSION_DESTROY_PATH = "/var/www/html/backend/sessionDestroy.php";
+
 // set true for debug print outs -- may break header redirection pages remember!
 if ( !isset($GLOBALS['debug']) ) {
 	$GLOBALS['debug'] = false;

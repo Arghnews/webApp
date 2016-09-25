@@ -41,6 +41,7 @@
 
 			$comment = "Comment field, unused currently!";
 
+			// actual success - made user
 			// create user in db
 			try {
 				$query = "insert into users (username,hash,comment) values (?,?,?)";
@@ -49,6 +50,12 @@
 				p("User successfully created");
 				$fields->setText("User created successfully!");
 				$fields->setSuccess(true);
+
+				// start the session
+				require_once SESSION_START_PATH;
+				//echo "Setting session to ".$fields->getValue("username")."\n";
+				$_SESSION["username"] = $fields->getValue("username");
+				//echo "Session username is ".$_SESSION["username"]."\n";
 			} catch (Exception $e) { // obviously this could be PDOException
 				p("Database error ".$e->getMessage());
 				$fields->setText("Could not create user, database error");

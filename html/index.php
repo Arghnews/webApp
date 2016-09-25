@@ -1,3 +1,7 @@
+<?php 
+	require_once "/var/www/static/common.php";
+	require_once(SESSION_START_PATH);
+?>
 <!DOCTYPE html PUBLIC "-//IETF//DTD HTML 2.0//EN">
 <HTML>
 	<HEAD>
@@ -6,6 +10,9 @@
 		</TITLE>
 	</HEAD>
 	<BODY>
+		
+		
+		
 		<H1>Hi</H1>
 		<P>This is very minimal "hello world" HTML document.</P> 
 		<br>
@@ -27,14 +34,25 @@
 			<br>
 			Login as pi:pi if prompted
 			<br>
+			Session should be next - 
+			'.$_SESSION["username"].'
 			</H2>
 			';
+			if ( isset($_SESSION["username"]) ) {
+				echo "It is set";
+			} else {
+				echo "It is not set";
+			}
 			
 		?>
 
 		<br>
 		<form action="register.php" method="post">
 			<input type="submit" value="Go to registration page!">
+		</form>
+
+		<form action="backend/logout.php" method="post">
+			<input type="submit" value="Logout">
 		</form>
 	</BODY>
 </HTML>

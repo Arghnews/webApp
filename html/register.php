@@ -11,11 +11,12 @@
 	<script type="text/javascript" src="/static/common.js"></script>
 	<script>
 
-		function appendStatus( json ) {
+		// append text to fields in form
+		function appendStatus( json,formId ) {
 			var fields = json["data"];
 			$.each(fields, function(field, val) {
 				var fieldData = val["data"];
-				var problemChild = $( "input[name=" + field + "]");
+				var problemChild = $( "#" + formId + " input[name=" + field + "]");
 				var statusText = fieldData["text"];
 				problemChild.closest("span").find("x-status").html(statusText);
 			});
@@ -61,7 +62,7 @@
 				sendCheck(serialForm,formId, function( json ) {
 					console.log("Received successful response!");
 					console.dir(json);
-					appendStatus(json);
+					appendStatus(json,formId);
 				});
 			});
 
@@ -70,7 +71,7 @@
 				var serialForm = $( "#" + formId + " input" ).serialize();
 				sendCheck(serialForm,formId,function( json ) {
 					console.log("Received successful response!");
-				 	appendStatus(json);
+				 	appendStatus(json,formId);
 					if ( json["success"] == true ) {
 						console.log("Passed validation");
 						console.dir(json["text"]);
