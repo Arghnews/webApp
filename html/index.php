@@ -38,7 +38,7 @@
 			} else {
 				// if logged in
 				echo '
-				<li>Welcome '.$_SESSION["username"].'</li>
+				<li>Welcome '.printHtml($_SESSION["username"]).'</li>
 				<li><a href="backend/logout.php">Logout</a></li>
 				';
 			}
@@ -67,7 +67,7 @@
 			Login as pi:pi if prompted
 			<br>
 			Session should be next - 
-			'.$_SESSION["username"].'
+			'.printHtml($_SESSION["username"]).'
 			</H2>
 			';
 			

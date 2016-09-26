@@ -8,6 +8,12 @@ if ( !isset($GLOBALS['debug']) ) {
 	$GLOBALS['debug'] = false;
 }
 
+// print stuff to page like <script>alert("Hi")</script> safely
+// should be used on printing ANY output to page
+function printHtml($p) {
+	return htmlspecialchars($p, ENT_QUOTES, 'UTF-8');
+}
+
 // println, puts br in for html, only prints if global debug var is set
 function p($p) {
 	if ( $GLOBALS['debug'] === true ) {
