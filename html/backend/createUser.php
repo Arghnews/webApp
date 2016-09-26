@@ -15,7 +15,6 @@
 	p("Fieldlist object should all data received - printing it as json below");
 	p($fields);
 
-
 	checkUsername($fields,$pdo);
 
 	checkPassword($fields);
@@ -68,6 +67,7 @@
 
 	function checkUsername($fields,$pdo) {
 		if ( $fields->hasKey("username") ) {
+			$fields->getField("username")->setSuccess(false);
 			// username cannot be empty
 			if ( $fields->getValue("username") === "" ) {
 				$fields->getField("username")->setText("username may not be empty");
@@ -84,6 +84,7 @@
 	function checkPassword($fields) {
 		// checks if password between 8 and 24 chars
 		if ( $fields->hasKey("password") ) {
+			$fields->getField("password")->setSuccess(false);
 			if ( passwordGood($fields->getValue("password")) !== true ) {
 				$fields->getField("password")->appendText("please use a password between 8 and 24 characters");
 				$fields->getField("password")->setSuccess(false);

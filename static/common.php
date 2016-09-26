@@ -11,13 +11,8 @@ if ( !isset($GLOBALS['debug']) ) {
 // println, puts br in for html, only prints if global debug var is set
 function p($p) {
 	if ( $GLOBALS['debug'] === true ) {
-		echo $p."\n";
+		echo $p."\t<br>\n";
 	}
-}
-
-// function to sanitise all input
-function sanitise($str) {
-	return $str;
 }
 
 // for now all hard coded, should be fine
@@ -87,6 +82,7 @@ class FieldList {
 
 	// boolean, meant to be all success values ANDed
 	public function getSuccess() {
+		p("Checking success status of all");
 		// set false if error has occurred, can return false immediately
 		if ( $this->success === false ) {
 			return false;
@@ -151,12 +147,20 @@ class FieldList {
 		return $top;
 	}
 
+	// before this called toJson which has $this->getSuccess() in
+	// meaning printing would change the data - BAD
 	public function __toString() {
-		return json_encode($this->toJson());
+		$data = array();
+		foreach ($this->fields as $name => $field) {
+			$data += [$name => $field->toJson()];
+		}
+		$top = array("success"=>$this->success,"data"=>$data,"text"=>$this->text);
+		return json_encode($top);
 	}
 }
 
 // these are created with success as FALSE by default
+// this is because if using object assumed you want some checks
 // corresponds to a field in a html form
 // text var will be used in js on page to inform user of the problem
 //{

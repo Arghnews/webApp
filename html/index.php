@@ -11,7 +11,39 @@
 	</HEAD>
 	<BODY>
 		
-		
+		<style>
+		ul {list-style-type: none; margin: 0; padding: 0;}
+		li {display: inline;}
+		.topCorner {
+			position:absolute;
+		}
+		</style>
+
+		<ul>
+			<li>
+			</li>
+			<?php
+			if ( !isset($_SESSION["username"]) ) {
+				// if not logged in
+				echo '
+				<li><a href="register.php">Register</a></li>
+				<form action="backend/login.php" method="post">
+					Username:
+					<input type="text" name="username" style="display: inline;">
+					Password:
+					<input type="password" name="password">
+					<input type="submit" value="Login">
+				</form>
+				';
+			} else {
+				// if logged in
+				echo '
+				<li>Welcome '.$_SESSION["username"].'</li>
+				<li><a href="backend/logout.php">Logout</a></li>
+				';
+			}
+			?>
+		</ul>
 		
 		<H1>Hi</H1>
 		<P>This is very minimal "hello world" HTML document.</P> 
@@ -38,21 +70,9 @@
 			'.$_SESSION["username"].'
 			</H2>
 			';
-			if ( isset($_SESSION["username"]) ) {
-				echo "It is set";
-			} else {
-				echo "It is not set";
-			}
 			
 		?>
 
 		<br>
-		<form action="register.php" method="post">
-			<input type="submit" value="Go to registration page!">
-		</form>
-
-		<form action="backend/logout.php" method="post">
-			<input type="submit" value="Logout">
-		</form>
 	</BODY>
 </HTML>
