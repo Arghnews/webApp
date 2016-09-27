@@ -6,7 +6,7 @@ try {
 	p("<br>");
 	p("Rebooting now, give me a minute or two then go back to \"http://pi.local\" !");
 	header("Location: /");
-	shell_exec("sudo /sbin/reboot");
+	shell_exec("sudo /sbin/reboot -p");
 } catch (Exception $e) {
 	p($e);
 }

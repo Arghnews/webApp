@@ -57,22 +57,16 @@
 			}
 			?>
 		</ul>
-		
-		<H1>Hi</H1>
-		<P>This is very minimal "hello world" HTML document.</P> 
 		<br>
 		<!--<img src="images/doge.jpeg">-->
 		<br>
 		<?php
 			echo 'Hi from php
 			<br>
-			'.exec("whoami").'
-			<br>
 			Time was '.date("H:i:s, l d.m.Y").' - will be updated to be dynamic one day when I get round to it
 			<H2>
 			<br>
 			<a href="https://support.apple.com/kb/DL999?locale=en_US">Download and install this to be able to see the pi on the network from a windows machine!</a>
-			<br>
 			<br><br>
 			<a href="http://pi:32400/web/index.html/">Click me to login to plex! This is where the movies are!</a>
 			<br>
@@ -88,6 +82,16 @@
 			If you find the pi is not working as you would please contact your local chip shop
 			<br>
 			<a class="confirm" href="/reboot.php">Click here to reboot - please use sensibly</a>
+			<br> Obviously after clicking this button this webpage won\'t work until reboot is done!
+			<br><br>
+			<br>
+			<a class="confirm" href="/halt.php">Click here to poweroff</a>
+			<br>
+			Do this before unplugging the pi please! After clicking it wait a good 15 seconds or so. The pi\'s lights will go off when it\'s off
+			<br>
+			To turn it on again please just plug it back in at the mains or replug the micro USB connector
+			<br><br>
+			Always remember I\'m at "http://pi.local"
 			<br>
 			</H2>
 			';
